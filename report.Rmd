@@ -1,0 +1,141 @@
+---
+title: "615 Final Project"
+author: "Simu Huang"
+date: "2020/12/12"
+output:
+  pdf_document: 
+    latex_engine: xelatex
+  
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(lubridate)
+library(bizdays)
+library(tidyquant)
+
+```
+
+# Introduction
+ 
+According to the World Health Organization (WHO, 2020), the coronavirus (COVID-19) was worsening around the globe and has 71 million cases confirmed as well as over 1.6 million deaths across the globe as of December 14th, 2020. Given the widespread and ongoing transmission of the novel coronavirus worldwide, the WHO officially declared a pandemic on March 11, 2020.
+
+The pandemic can trigger a number of channels, including for example, stock markets, global consumption, all of which can affect the global economy. Thus it would be essential for the investors to consider some advice before making any investment. This project focuses on the stock market and try to combine statistical learning methods and online investment advice to provide own suggestions and simulate a investment.
+
+# Data
+
+First, we use the 'tidyquant' packages to download the data from "The Global Dow", which is a 150-stock index of corporations from around the world. The Global Dow Index not only tracks the world’s leading companies in all walks of life based on their current size and reputation, but also on their potential.
+  
+```{r, echo = FALSE, include = FALSE}
+#import the index of "DOWGLOBAL"
+tq_index_options()
+index_dow <- tq_index("DOWGLOBAL")
+```
+
+Based on the investment advises attached in the reference, in the second half of 2020, the aviation, car, retail, pharmaceutical and agriculture industries will experience a growing development so the prices of the companies in these fields will become more profitable. And as the epidemic has been brought under control in some countries, people's demand for some non-essential goods will pick up. Therefore, the stocks of Anheuser-Busch InBev SA/NV(`Pfizer Inc.`), Daimler AG(`DAI-DE`), LVMH Moet Hennessy Louis Vuitton SE(`MC-FR`), Panasonic Corporation(`6752-JP`), and Pfizer Inc(`PFE`) are some great choices. 
+  
+```{r, echo = FALSE, include = FALSE}
+select_name <- c("DAI-DE" , "MC-FR" , "6752-JP" , "PFE" , "ABI-BE")
+select_stock <- index_dow %>% filter(symbol %in% select_name)
+```
+
+# Explanation 
+
+We have \$250,000 to buy the stocks. For the next six months, the vaccine of COVID_19 will continue to be the hottest thing in the medical field, I will spend \$90,000 on the stock of Pfizer Inc.(`PFE`). Due to the control of the COVID-19 spread, the world economy will gradually restore in the last half-year of 2020. With growing economy, customers will have accumulated assets for purchasing non-essential commodities such as cars, electronics, and beverages. Also, people will be more willingly to travel domestically or internationally. Thus the aviation industry will also experience a restore. So I decide to choose the following stocks of the leading companies in each industry. 
+
+The following five financial series charts show the price trend of each stock I selected.
+
+```{r}
+options("getSymbols.warning4.0"=FALSE)
+options("getSymbols.yahoo.warning"=FALSE)
+
+ df_6752 <- index_dow %>% filter(symbol %in% "6752-JP")
+ 
+# Downloading Panasonic corp price using quantmod
+a <- getSymbols("PCRFF", from = '2020-07-01',
+           to = "2020-12-01",warnings = FALSE,
+           auto.assign = TRUE)  
+
+chartSeries(to.daily(PCRFF), theme=chartTheme('white'))
+# head(PCRFF)
+# tail(PCRFF)
+```
+
+```{r}
+
+
+df_DAI <- index_dow %>% filter(symbol %in% "DAI-DE")
+
+# Downloading Daimler AG price using quantmod
+
+a <- getSymbols("DDAIF", from = '2020-07-01',
+           to = "2020-12-01",warnings = FALSE,
+           auto.assign = TRUE)  
+
+chartSeries(to.daily(DDAIF), theme=chartTheme('white'))
+# head(DDAIF)
+# tail(DDAIF)
+```
+
+```{r}
+
+df_MC <- index_dow %>% filter(symbol %in% "MC-FR")
+
+# Downloading LVMH Moet Hennessy Louis Vuitton SE price using quantmod
+
+
+b <- getSymbols("LVMHF", from = '2020-07-01',
+           to = "2020-12-01",warnings = FALSE,
+           auto.assign = TRUE)  
+
+chartSeries(to.daily(LVMHF), theme=chartTheme('white'))
+# head(LVMHF)
+# tail(LVMHF)
+```
+
+
+```{r }
+df_ABI <- index_dow %>% filter(symbol %in% "ABI-BE")
+
+# Downloading Anheuser-Busch InBev SA/NV price using quantmod
+a <- getSymbols("BUDFF", from = '2020-07-01',
+           to = "2020-12-01",warnings = FALSE,
+           auto.assign = TRUE)  
+
+chartSeries(to.daily(BUDFF), theme=chartTheme('white'))
+# head(BUDFF)
+# tail(BUDFF)
+```
+
+```{r}
+
+df_PFE <- index_dow %>% filter(symbol %in% "PFE")
+
+# Downloading Pfizer Inc. price using quantmod
+
+
+a <- getSymbols("PFE", from = '2020-07-01',
+           to = "2020-12-01",warnings = FALSE,
+           auto.assign = TRUE)  
+
+chartSeries(to.daily(PFE), theme=chartTheme('white'))
+# head(PFE)
+# tail(PFE)
+```
+
+# Conclusion
+  
+  After the analysis, I bought  10,332 stocks of Pfizer Inc. with \$90,000, and the remaining \$160,000 was divided evenly among the stocks of other four companies, LVMH Moet Hennessy Louis Vuitton SE, Anheuser-Busch InBev SA/NV, Panasonic Corporation, and Daimler AG, buying 995 stocks, 90 stocks, 818 stocks and 1269 stocks respectively. Half a year later, regarding to the stock price on December 1 plus the dividends each stock, the stocks of Panasonic Corporation I own are worth \$21,333, the stocks of Daimler AG are worth \$21,578, the stocks of LVMH Moet Hennessy Louis Vuitton SE are worth \$12,540, the stocks of Anheuser-Busch InBev SA/NV is worth \$14,843, and the stocks of Pfizer Inc. is worth \$8,298. After deducting the principal, I accumulated a total of \$84,592. 
+
+# Reference
+
+1: [A Better Route for Green Investing]:(https://www.thinkadvisor.com/2020/05/27/a-better-route-for-green-investing/)
+
+2: [INVESTMENT INSIGHTS ON THE PATH AHEAD TO A MARKET RECOVERY]:(https://bluerocke.com/2020/06/)
+
+
+
+
+
